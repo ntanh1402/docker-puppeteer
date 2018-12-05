@@ -11,9 +11,6 @@ const puppeteer = require('puppeteer-extra')
 // register plugins through `.use()`
 puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')({ makeWindows: true }))
 puppeteer.use(require('puppeteer-extra-plugin-stealth')())
-puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
-  blockedTypes: new Set(['image', 'media', 'stylesheet'])
-})) 
 
 let cluster;
 let getHtml;
