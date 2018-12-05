@@ -57,7 +57,7 @@ async function getCluster(req) {
         maxConcurrency: 4,
         puppeteer,
         puppeteerOptions: {
-          headless: false,
+          headless: true,
           defaultViewport: {
             width: 1920,
             height: 1080,
