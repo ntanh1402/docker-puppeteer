@@ -12,7 +12,7 @@ const puppeteer = require('puppeteer-extra')
 puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')({ makeWindows: true }))
 puppeteer.use(require('puppeteer-extra-plugin-stealth')())
 puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
-  blockedTypes: new Set(['image', 'media', 'stylesheet'])
+  blockedTypes: new Set(['image', 'media'])
 })) 
 
 let cluster;
