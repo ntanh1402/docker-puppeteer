@@ -152,6 +152,12 @@ app.get('/url', function (request, response) {
   })();
 });
 
+app.get('/healthcheck', function (request, response) {
+  (async() => {
+    await response.send('OK');
+  })();
+});
+
 const server = app.listen(8080, err => {
     if (err) {
       return console.error(err);
