@@ -6,14 +6,16 @@ const {
 
 // puppeteer-extra is a drop-in replacement for puppeteer,
 // it augments the installed puppeteer with plugin functionality
-const puppeteer = require('puppeteer-extra')
+const puppeteer = require('puppeteer-extra');
 
 // register plugins through `.use()`
-puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')({ makeWindows: true }))
-puppeteer.use(require('puppeteer-extra-plugin-stealth')())
+puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')({
+    makeWindows: true
+  }));
+puppeteer.use(require('puppeteer-extra-plugin-stealth')());
 puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
-  blockedTypes: new Set(['image', 'media'])
-})) 
+    blockedTypes: new Set(['image', 'media'])
+  }));
 
 let cluster;
 let getHtml;
@@ -55,6 +57,7 @@ async function getCluster(req) {
     cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
         maxConcurrency: 4,
+        puppeteer,
         puppeteerOptions: {
           headless: false,
           defaultViewport: {
@@ -94,6 +97,8 @@ async function getCluster(req) {
 
       const htmlStr = await page.content();
 
+      await page.close();
+
       res.set('Content-Type', 'text/html');
       res.send(htmlStr);
     };
@@ -124,6 +129,8 @@ async function getCluster(req) {
       });
 
       const urlStr = await page.url();
+
+      await page.close();
 
       res.set('Content-Type', 'text/html');
       res.send(urlStr);
