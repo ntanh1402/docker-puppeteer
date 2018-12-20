@@ -57,7 +57,7 @@ async function getCluster(req) {
     cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
         maxConcurrency: 4,
-        puppeteer,
+        //puppeteer,
         puppeteerOptions: {
           headless: false,
           defaultViewport: {
