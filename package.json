@@ -9,12 +9,12 @@
   "author": "Anh",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3",
-    "puppeteer": "^1.11.0",
-    "puppeteer-cluster": "^0.12.1",
-    "puppeteer-extra": "^2.1.1",
-    "puppeteer-extra-plugin-block-resources": "^2.1.1",
-    "puppeteer-extra-plugin-stealth": "^2.1.1",
-    "puppeteer-extra-plugin-anonymize-ua": "^2.1.1"
+    "express": "latest",
+    "puppeteer": "latest",
+    "puppeteer-cluster": "latest",
+    "puppeteer-extra": "latest",
+    "puppeteer-extra-plugin-block-resources": "latest",
+    "puppeteer-extra-plugin-stealth": "latest",
+    "puppeteer-extra-plugin-anonymize-ua": "latest"
   }
 }

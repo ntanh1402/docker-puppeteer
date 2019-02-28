@@ -9,13 +9,11 @@ const {
 const puppeteer = require('puppeteer-extra');
 
 // register plugins through `.use()`
-puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')({
-    makeWindows: true
-  }));
+puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')())
 puppeteer.use(require('puppeteer-extra-plugin-stealth')());
-/*puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
-    blockedTypes: new Set(['image', 'media'])
-  }));*/
+//puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
+//    blockedTypes: new Set(['image', 'media'])
+//  }));
 
 let cluster;
 let getHtml;
@@ -57,7 +55,7 @@ async function getCluster(req) {
     cluster = await Cluster.launch({
         concurrency: Cluster.CONCURRENCY_CONTEXT,
         maxConcurrency: 4,
-        //puppeteer,
+        puppeteer,
         puppeteerOptions: {
           headless: false,
           defaultViewport: {
