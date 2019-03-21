@@ -29,4 +29,4 @@ RUN npm install --only=production
 EXPOSE 8080
 
 ENTRYPOINT ["dumb-init", "--"]
-CMD [ "xvfb-run", "npm", "start" ]
+CMD [ "xvfb-run", "-a", "-e", "/dev/stdout", "npm", "start" ]

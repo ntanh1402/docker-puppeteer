@@ -9,11 +9,11 @@ const {
 const puppeteer = require('puppeteer-extra');
 
 // register plugins through `.use()`
-puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')())
+puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')());
 puppeteer.use(require('puppeteer-extra-plugin-stealth')());
-//puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
-//    blockedTypes: new Set(['image', 'media'])
-//  }));
+puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
+    blockedTypes: new Set(['image', 'media'])
+  }));
 
 let cluster;
 let getHtml;
@@ -53,8 +53,8 @@ async function getCluster(req) {
     }
 
     cluster = await Cluster.launch({
-        concurrency: Cluster.CONCURRENCY_CONTEXT,
-        maxConcurrency: 4,
+        concurrency: Cluster.CONCURRENCY_BROWSER,
+        maxConcurrency: 2,
         puppeteer,
         puppeteerOptions: {
           headless: false,
@@ -64,8 +64,6 @@ async function getCluster(req) {
           },
           args: args
         },
-        retryLimit: 1,
-        timeout: 15000,
         monitor: false,
       });
   }
@@ -79,26 +77,33 @@ async function getCluster(req) {
         res
       } = data;
 
-      const url = req.query.url;
-      if (!url) {
-        return res.send('Please provide URL as GET parameter, for example: <a href="?url=https://example.com">?url=https://example.com</a>');
-      }
-      if (proxy) {
-        await page.authenticate({
-          username: 'ntanh1402',
-          password: 'tuananh'
+      try {
+        const url = req.query.url;
+        if (!url) {
+          return res.send('Please provide URL as GET parameter, for example: <a href="?url=https://example.com">?url=https://example.com</a>');
+        }
+      
+        if (proxy) {
+          await page.authenticate({
+            username: 'ntanh1402',
+            password: 'tuananh'
+          });
+        }
+        await page.goto(url, {
+          timeout: 30000,
+          waitUntil: ['load', 'networkidle2']
         });
+
+        const htmlStr = await page.content();
+
+        res.set('Content-Type', 'text/html');
+        res.send(htmlStr);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+      } finally {
+        await page.close();
       }
-      await page.goto(url, {
-        waitUntil: ['load', 'networkidle2']
-      });
-
-      const htmlStr = await page.content();
-
-      await page.close();
-
-      res.set('Content-Type', 'text/html');
-      res.send(htmlStr);
     };
   }
   if (!getUrl) {
@@ -111,27 +116,33 @@ async function getCluster(req) {
         res
       } = data;
 
-      const url = req.query.url;
-      if (!url) {
-        return res.send('Please provide URL as GET parameter, for example: <a href="?url=https://example.com">?url=https://example.com</a>');
-      }
+      try {
+        const url = req.query.url;
+        if (!url) {
+          return res.send('Please provide URL as GET parameter, for example: <a href="?url=https://example.com">?url=https://example.com</a>');
+        }
 
-      if (proxy) {
-        await page.authenticate({
-          username: 'ntanh1402',
-          password: 'tuananh'
+        if (proxy) {
+          await page.authenticate({
+            username: 'ntanh1402',
+            password: 'tuananh'
+          });
+        }
+        await page.goto(url, {
+          timeout: 30000,
+          waitUntil: ['domcontentloaded']
         });
+
+        const urlStr = await page.url();
+
+        res.set('Content-Type', 'text/plain');
+        res.send(urlStr);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+      } finally {
+        await page.close();
       }
-      await page.goto(url, {
-        waitUntil: ['domcontentloaded']
-      });
-
-      const urlStr = await page.url();
-
-      await page.close();
-
-      res.set('Content-Type', 'text/html');
-      res.send(urlStr);
     };
   }
 }
