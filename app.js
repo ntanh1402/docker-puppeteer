@@ -64,7 +64,7 @@ async function getCluster(req) {
           },
           args: args
         },
-        monitor: false,
+        monitor: true,
       });
   }
   if (!getHtml) {

@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "latest",
-    "puppeteer": "latest",
+    "puppeteer": "1.12.2",
     "puppeteer-cluster": "latest",
     "puppeteer-extra": "latest",
     "puppeteer-extra-plugin-block-resources": "latest",
