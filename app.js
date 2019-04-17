@@ -85,8 +85,8 @@ async function getCluster(req) {
       
         if (proxy) {
           await page.authenticate({
-            username: 'ntanh1402',
-            password: 'tuananh'
+            username: 'WKbXTyQgU',
+            password: 'Aey1aQ6TgEZ'
           });
         }
         await page.goto(url, {
@@ -124,8 +124,8 @@ async function getCluster(req) {
 
         if (proxy) {
           await page.authenticate({
-            username: 'ntanh1402',
-            password: 'tuananh'
+            username: 'WKbXTyQgU',
+            password: 'Aey1aQ6TgEZ'
           });
         }
         await page.goto(url, {
