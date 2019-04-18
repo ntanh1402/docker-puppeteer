@@ -1,8 +1,6 @@
 const express = require('express');
 const app = express();
-const {
-  Cluster
-} = require('puppeteer-cluster');
+const { Cluster } = require('puppeteer-cluster');
 
 // puppeteer-extra is a drop-in replacement for puppeteer,
 // it augments the installed puppeteer with plugin functionality
@@ -12,8 +10,8 @@ const puppeteer = require('puppeteer-extra');
 puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')());
 puppeteer.use(require('puppeteer-extra-plugin-stealth')());
 puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
-    blockedTypes: new Set(['image', 'media'])
-  }));
+  blockedTypes: new Set(['image', 'media'])
+}));
 
 let cluster;
 let getHtml;
@@ -53,44 +51,41 @@ async function getCluster(req) {
     }
 
     cluster = await Cluster.launch({
-        concurrency: Cluster.CONCURRENCY_BROWSER,
-        maxConcurrency: 2,
-        puppeteer,
-        puppeteerOptions: {
-          headless: false,
-          defaultViewport: {
-            width: 1920,
-            height: 1080,
-          },
-          args: args
+      concurrency: Cluster.CONCURRENCY_CONTEXT,
+      maxConcurrency: 2,
+      puppeteer,
+      puppeteerOptions: {
+        headless: false,
+        defaultViewport: {
+          width: 1920,
+          height: 1080,
         },
-        monitor: true,
-      });
+        args: args
+      },
+      monitor: false,
+    });
   }
   if (!getHtml) {
-    getHtml = async({
-        page,
-        data
-      }) => {
-      const {
-        req,
-        res
-      } = data;
+    getHtml = async ({ page, data }) => {
+      const { req, res } = data;
 
       try {
         const url = req.query.url;
         if (!url) {
           return res.send('Please provide URL as GET parameter, for example: <a href="?url=https://example.com">?url=https://example.com</a>');
         }
-      
+
         if (proxy) {
+          const user = req.query.username;
+          const pass = req.query.password;
+
           await page.authenticate({
-            username: 'ntanh1402',
-            password: 'tuananh'
+            username: user,
+            password: pass
           });
         }
         await page.goto(url, {
-          timeout: 30000,
+          timeout: 20000,
           waitUntil: ['load', 'networkidle2']
         });
 
@@ -102,19 +97,14 @@ async function getCluster(req) {
         console.error(error);
         res.status(500).send(error);
       } finally {
+        await page.goto('about:blank');
         await page.close();
       }
     };
   }
   if (!getUrl) {
-    getUrl = async({
-        page,
-        data
-      }) => {
-      const {
-        req,
-        res
-      } = data;
+    getUrl = async ({ page, data }) => {
+      const { req, res } = data;
 
       try {
         const url = req.query.url;
@@ -123,17 +113,22 @@ async function getCluster(req) {
         }
 
         if (proxy) {
+          const user = req.query.username;
+          const pass = req.query.password;
+
           await page.authenticate({
-            username: 'ntanh1402',
-            password: 'tuananh'
+            username: user,
+            password: pass
           });
         }
         await page.goto(url, {
-          timeout: 30000,
+          timeout: 20000,
           waitUntil: ['domcontentloaded']
         });
 
         const urlStr = await page.url();
+        await page.goto('about:blank');
+        await page.close();
 
         res.set('Content-Type', 'text/plain');
         res.send(urlStr);
@@ -141,14 +136,15 @@ async function getCluster(req) {
         console.error(error);
         res.status(500).send(error);
       } finally {
+        await page.goto('about:blank');
         await page.close();
       }
     };
   }
 }
 
-app.get('/html', function (request, response) {
-  (async() => {
+app.get('/html', function(request, response) {
+  (async () => {
     await getCluster(request);
     await cluster.queue({
       req: request,
@@ -157,8 +153,8 @@ app.get('/html', function (request, response) {
   })();
 });
 
-app.get('/url', function (request, response) {
-  (async() => {
+app.get('/url', function(request, response) {
+  (async () => {
     await getCluster(request);
     await cluster.queue({
       req: request,
@@ -167,16 +163,15 @@ app.get('/url', function (request, response) {
   })();
 });
 
-app.get('/healthcheck', function (request, response) {
-  (async() => {
+app.get('/healthcheck', function(request, response) {
+  (async () => {
     await response.send('OK');
   })();
 });
 
 const server = app.listen(8080, err => {
-    if (err) {
-      return console.error(err);
-    }
-    const port = server.address().port;
-    console.info(`App listening on port ${port}`);
-  });
+  if (err) {
+    return console.error(err);
+  }
+  console.info('App listening on port 8080');
+});
