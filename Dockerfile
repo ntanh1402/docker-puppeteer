@@ -6,7 +6,7 @@ libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 li
 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
 fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst ttf-freefont \
-ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget --no-install-recommends && \
+ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget openvpn --no-install-recommends && \
 apt-get install -yq xvfb && \
 apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/* && rm -rf /src/*.deb
 
@@ -17,16 +17,13 @@ RUN chmod +x /usr/local/bin/dumb-init
 # Create app directory
 WORKDIR /root
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package.json app.js ./
+COPY package.json app.js run.sh ./
 
 #RUN npm install
 # If you are building your code for production
-RUN npm install --only=production
+RUN mkdir openvpn && npm install --only=production
 
 EXPOSE 8080
 
 ENTRYPOINT ["dumb-init", "--"]
-CMD [ "xvfb-run", "-a", "-e", "/dev/stdout", "npm", "start" ]
+CMD [ "sh", "run.sh" ]
