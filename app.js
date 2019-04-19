@@ -80,7 +80,7 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
       res.send(result);
     } catch (err) {
       console.error(err);
-      res.status(500).send(err);
+      res.send(err);
     }
   });
 
@@ -95,7 +95,7 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
       res.send(result);
     } catch (err) {
       console.error(err);
-      res.status(500).send(err);
+      res.send(err);
     }
   });
 
