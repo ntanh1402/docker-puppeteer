@@ -15,19 +15,24 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
     if (!req.query.url) {
       return res.end('Please specify url like this: ?url=example.com');
     }
+
+    var args = [
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-setuid-sandbox',
+      '--no-sandbox',
+      '--no-zygote',
+    ];
+    if (req.query.proxy) {
+      args.push('--proxy-server=' + req.query.proxy);
+    }
     const browser = await puppeteer.launch({
       headless: false,
       defaultViewport: {
         width: 1920,
         height: 1080,
       },
-      args: [
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
-        '--no-sandbox',
-        '--no-zygote'
-      ]
+      args: args
     });
 
     try {
@@ -37,10 +42,21 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
       // Create a new page inside context.
       const page = await context.newPage();
 
+      if (req.query.proxy) {
+        const user = req.query.username;
+        const pass = req.query.password;
+
+        await page.authenticate({
+          username: user,
+          password: pass
+        });
+      }
+
       await page.goto(req.query.url, {
         timeout: 20000,
         waitUntil: ['load', 'networkidle2']
       });
+
       const result = await page.content();
 
       res.set('Content-Type', 'text/html');
@@ -57,19 +73,24 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
     if (!req.query.url) {
       return res.end('Please specify url like this: ?url=example.com');
     }
+
+    var args = [
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-setuid-sandbox',
+      '--no-sandbox',
+      '--no-zygote',
+    ];
+    if (req.query.proxy) {
+      args.push('--proxy-server=' + req.query.proxy);
+    }
     const browser = await puppeteer.launch({
       headless: false,
       defaultViewport: {
         width: 1920,
         height: 1080,
       },
-      args: [
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
-        '--no-sandbox',
-        '--no-zygote'
-      ]
+      args: args
     });
 
     try {
@@ -78,6 +99,16 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
 
       // Create a new page inside context.
       const page = await context.newPage();
+
+      if (req.query.proxy) {
+        const user = req.query.username;
+        const pass = req.query.password;
+
+        await page.authenticate({
+          username: user,
+          password: pass
+        });
+      }
 
       await page.goto(req.query.url, {
         timeout: 20000,
