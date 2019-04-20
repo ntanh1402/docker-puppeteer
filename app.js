@@ -55,7 +55,7 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
       }
 
       await page.goto(req.query.url, {
-        timeout: 20000,
+        timeout: 60000,
         waitUntil: ['load', 'networkidle2']
       });
 
@@ -116,7 +116,7 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
       }
 
       await page.goto(req.query.url, {
-        timeout: 20000,
+        timeout: 60000,
         waitUntil: ['domcontentloaded']
       });
 
