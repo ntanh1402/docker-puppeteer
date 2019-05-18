@@ -26,7 +26,7 @@ COPY package.json app.js ./
 # If you are building your code for production
 RUN npm install --only=production
 
-EXPOSE 8080
+EXPOSE 8000
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD [ "xvfb-run", "-a", "-e", "/dev/stdout", "npm", "start" ]

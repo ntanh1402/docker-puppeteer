@@ -138,8 +138,8 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
     res.send('OK');
   });
 
-  app.listen(8080, function() {
-    console.log('Server listening on port 8080.');
+  app.listen(8000, function() {
+    console.log('Server listening on port 8000.');
   });
 
 })();
