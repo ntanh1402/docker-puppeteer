@@ -59,6 +59,11 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
         waitUntil: ['domcontentloaded', 'networkidle2']
       });
 
+      if (req.query.waitFor) {
+        console.log('Waiting for "' + req.query.waitFor + '" ...');
+        await page.waitFor(req.query.waitFor);
+      }
+
       const result = await page.content();
 
       res.set('Content-Type', 'text/html');
@@ -119,6 +124,11 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
         timeout: 30000,
         waitUntil: ['domcontentloaded']
       });
+
+      if (req.query.waitFor) {
+        console.log('Waiting for "' + req.query.waitFor + '" ...');
+        await page.waitFor(req.query.waitFor);
+      }
 
       const result = await page.url();
 
