@@ -4,7 +4,7 @@ const app = express();
 const puppeteer = require('puppeteer-extra');
 
 //puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')());
-//puppeteer.use(require('puppeteer-extra-plugin-stealth')());
+puppeteer.use(require('puppeteer-extra-plugin-stealth')());
 //puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
 //    blockedTypes: new Set(['image', 'media'])
 //}));
