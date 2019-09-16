@@ -3,11 +3,11 @@ const app = express();
 
 const puppeteer = require('puppeteer-extra');
 
-puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')());
-puppeteer.use(require('puppeteer-extra-plugin-stealth')());
-puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
-  blockedTypes: new Set(['image', 'media'])
-}));
+//puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')());
+//puppeteer.use(require('puppeteer-extra-plugin-stealth')());
+//puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
+//    blockedTypes: new Set(['image', 'media'])
+//}));
 
 (async () => {
 
@@ -54,6 +54,8 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
         });
       }
 
+      console.log('Start time: ' + getDateTime());
+
       await page.goto(req.query.url, {
         timeout: 30000,
         waitUntil: ['domcontentloaded', 'networkidle2']
@@ -63,6 +65,8 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
         console.log('Waiting for "' + req.query.waitFor + '" ...');
         await page.waitFor(req.query.waitFor);
       }
+
+      console.log('End time: ' + getDateTime());
 
       const result = await page.content();
 
@@ -120,6 +124,8 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
         });
       }
 
+      console.log('Start time: ' + getDateTime());
+
       await page.goto(req.query.url, {
         timeout: 30000,
         waitUntil: ['domcontentloaded']
@@ -129,6 +135,8 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
         console.log('Waiting for "' + req.query.waitFor + '" ...');
         await page.waitFor(req.query.waitFor);
       }
+
+      console.log('End time: ' + getDateTime());
 
       const result = await page.url();
 
@@ -151,5 +159,28 @@ puppeteer.use(require('puppeteer-extra-plugin-block-resources')({
   app.listen(8000, function() {
     console.log('Server listening on port 8000.');
   });
+
+  function getDateTime() {
+    var date = new Date();
+
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+
+    var min = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+
+    var sec = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+
+    var year = date.getFullYear();
+
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+
+    var day = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+
+    return year + ":" + month + ":" + day + ":" + hour + ":" + min + ":" + sec;
+  }
 
 })();
