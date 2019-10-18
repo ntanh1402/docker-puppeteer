@@ -58,7 +58,7 @@ puppeteer.use(require('puppeteer-extra-plugin-stealth')());
 
       await page.goto(req.query.url, {
         timeout: 30000,
-        waitUntil: ['domcontentloaded', 'networkidle2']
+        waitUntil: ['domcontentloaded']
       });
 
       if (req.query.waitFor) {
@@ -131,11 +131,6 @@ puppeteer.use(require('puppeteer-extra-plugin-stealth')());
         timeout: 30000,
         waitUntil: ['domcontentloaded']
       });
-
-      if (req.query.waitFor) {
-        console.log('Waiting for "' + req.query.waitFor + '" ...');
-        await page.waitFor(req.query.waitFor);
-      }
 
       console.log('End time: ' + getDateTime());
 
