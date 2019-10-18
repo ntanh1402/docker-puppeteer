@@ -74,6 +74,7 @@ puppeteer.use(require('puppeteer-extra-plugin-stealth')());
       res.send(result);
     } catch (err) {
       console.error(err);
+      res.set('Content-Type', 'text/plain');
       res.send(err);
     } finally {
       if (browser) {
@@ -144,6 +145,7 @@ puppeteer.use(require('puppeteer-extra-plugin-stealth')());
       res.send(result);
     } catch (err) {
       console.error(err);
+      res.set('Content-Type', 'text/plain');
       res.send(err);
     } finally {
       if (browser) {
