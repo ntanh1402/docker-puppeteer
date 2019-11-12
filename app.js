@@ -61,6 +61,13 @@ puppeteer.use(require('puppeteer-extra-plugin-stealth')());
         waitUntil: ['domcontentloaded']
       });
 
+      if (req.query.repeat) {
+        await page.goto(req.query.url, {
+          timeout: 30000,
+          waitUntil: ['domcontentloaded']
+        });
+      }
+
       if (req.query.waitFor) {
         console.log('Waiting for "' + req.query.waitFor + '" ...');
         await page.waitFor(req.query.waitFor);
@@ -131,6 +138,13 @@ puppeteer.use(require('puppeteer-extra-plugin-stealth')());
         timeout: 30000,
         waitUntil: ['domcontentloaded']
       });
+
+      if (req.query.repeat) {
+        await page.goto(req.query.url, {
+          timeout: 30000,
+          waitUntil: ['domcontentloaded']
+        });
+      }
 
       console.log('End time: ' + getDateTime());
 
